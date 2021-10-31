@@ -1,0 +1,18 @@
+.lead {
+  max-width: calc(100% - 148px * 2);
+  min-height: 1005px;
+  background-size: cover;
+}
+
+@media screen and (max-width: 1024px) {
+  .lead {
+    max-width: calc(100% - 48px * 2);
+    min-height: auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .lead {
+    max-width: 100%;
+  }
+}
