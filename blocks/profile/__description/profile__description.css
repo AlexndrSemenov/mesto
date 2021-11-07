@@ -1,0 +1,23 @@
+.profile__description {
+  max-width: calc(100% - 120px - 30px - 150px - 20px);
+  margin: auto auto auto 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .profile__description {
+    max-width: 334px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .profile__description {
+    max-width: calc(100% - 50px * 2);
+    margin: 26px auto 36px auto;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .profile__description {
+    max-width: 100%;
+  }
+}

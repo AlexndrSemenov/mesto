@@ -1,0 +1,9 @@
+.photo-grid__heart {
+  margin: auto 20px auto auto;
+  width: 22px;
+  height: 19px;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+}
