@@ -2,6 +2,7 @@
   width: 142px;
   height: 33px;
   margin-bottom: calc(74px - 33px);
+  background-size: contain;
 
 }
 
@@ -9,6 +10,6 @@
   .header__logo {
     width: 103.74px;
     height: 24.4px;
-    margin: 0 auto 31.6px 27px;
+    margin: 0 auto 27px 27px;
   }
 }

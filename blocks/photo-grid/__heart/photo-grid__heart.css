@@ -1,9 +1,19 @@
 .photo-grid__heart {
+  cursor: pointer;
   margin: auto 20px auto auto;
   width: 22px;
   height: 19px;
   background: none;
-  cursor: pointer;
-  padding: 0;
+  background-image: url(../../../images/heart.svg);
+  background-size: cover;
   border: none;
+}
+
+.photo-grid__heart:hover {
+  opacity: 0.5;
+  transition: 0.3s;
+}
+
+.photo-grid__heart:visited {
+  background-color: #000;
 }

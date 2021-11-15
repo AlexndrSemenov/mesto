@@ -1,18 +1,26 @@
 .profile__nav-item {
+  cursor: pointer;
   margin-left: 18px;
   margin-top: 15px;
-  background: none;
   width: 24px;
   height: 24px;
-  cursor: pointer;
+  background: none;
+  background-image: url(../../../images/pen.svg);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
   border: 1px solid #fff;
+}
+
+.profile__nav-item:hover {
+  opacity: 0.6;
+  transition: 0.3s;
 }
 
 @media screen and (max-width: 320px) {
   .profile__nav-item {
     margin: auto 19px auto 10px;
-    padding: 0;
     width: 18px;
     height: 18px;
+    background-size: 7.5px;
   }
 }

@@ -1,10 +1,19 @@
 .profile__nav-item-add {
+  cursor: pointer;
   margin: auto 0 auto auto;
-  background: none;
   width: 150px;
   height: 50px;
-  cursor: pointer;
-  border: 1px solid #fff;
+  background: none;
+  background-image: url(../../../images/plus.svg);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border: 2px solid #fff;
+  border-radius: 2px;
+}
+
+.profile__nav-item-add:hover {
+  opacity: 0.6;
+  transition: 0.3s;
 }
 
 @media screen and (max-width: 600px) {
@@ -17,6 +26,6 @@
   .profile__nav-item-add {
     margin: auto;
     width: 100%;
-    border: 2px solid #fff;
+    background-size: 16px;
   }
 }

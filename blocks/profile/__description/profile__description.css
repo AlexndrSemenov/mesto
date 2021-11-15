@@ -1,5 +1,6 @@
 .profile__description {
-  max-width: calc(100% - 120px - 30px - 150px - 20px);
+  max-width: calc(100% - 120px - 30px - 150px);
+  min-width: 400px;
   margin: auto auto auto 30px;
 }
 
@@ -12,7 +13,8 @@
 @media screen and (max-width: 600px) {
   .profile__description {
     max-width: calc(100% - 50px * 2);
-    margin: 26px auto 36px auto;
+    min-width: auto;
+    margin: 23px auto 32px auto;
   }
 }
 
