@@ -10,6 +10,13 @@
   }
 }
 
+@media screen and (max-width: 650px) {
+  .profile__description {
+    margin-bottom: 32px;
+  }
+}
+
+
 @media screen and (max-width: 600px) {
   .profile__description {
     max-width: calc(100% - 50px * 2);
