@@ -1,4 +1,4 @@
-const popupContent = document.querySelector('.popup__content');
+const popupContent = document.querySelector('.popup__form');
 const popupElement = document.querySelector('.popup');
 const navButton = document.querySelector('.profile__nav-item');
 const closeButton = popupElement.querySelector('.popup__close-button');
@@ -100,7 +100,7 @@ closeButtonImage.addEventListener('click', closePopupImage);
 
 
 // вставляем данные из попапа на сайт:
-const popupContentImage = popupImageElement.querySelector('.popup__container_image');
+const popupContentImage = popupImageElement.querySelector('.popup__form-image');
 const places = popupImageElement.querySelector ('.popup__text_type_place');
 const links = popupImageElement.querySelector('.popup__text_type_link');
 
