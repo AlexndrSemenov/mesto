@@ -30,48 +30,6 @@
 
     <section class="photo-grid body__photo-grid">
       <ul class="photo-grid__table">
-        <li class="photo-grid__item">
-          <img src="./images/1_yenisei.jpg" alt="Изображение реки Енисей" class="photo-grid__image">
-          <div class="photo-grid__description">
-            <h3 class="photo-grid__text">Енисей</h3>
-            <button type = "button" class="photo-grid__heart"></button>
-          </div>
-        </li>
-        <li class="photo-grid__item">
-          <img src="./images/2_lena.jpg" alt="Изображение реки Лена" class="photo-grid__image">
-          <div class="photo-grid__description">
-            <h3 class="photo-grid__text">Лена</h3>
-            <button type = "button" class="photo-grid__heart"></button>
-          </div>
-        </li>
-        <li class="photo-grid__item">
-          <img src="./images/3_amur.jpg" alt="Изображение реки Амур" class="photo-grid__image">
-          <div class="photo-grid__description">
-            <h3 class="photo-grid__text">Амур</h3>
-            <button type = "button" class="photo-grid__heart"></button>
-          </div>
-        </li>
-        <li class="photo-grid__item">
-          <img src="./images/4_ob.jpg" alt="Изображение реки Обь" class="photo-grid__image">
-          <div class="photo-grid__description">
-            <h3 class="photo-grid__text">Обь</h3>
-            <button type = "button" class="photo-grid__heart"></button>
-          </div>
-        </li>
-        <li class="photo-grid__item">
-          <img src="./images/5_volga.jpg" alt="Изображение реки Волга" class="photo-grid__image">
-          <div class="photo-grid__description">
-            <h3 class="photo-grid__text">Волга</h3>
-            <button type = "button" class="photo-grid__heart"></button>
-          </div>
-        </li>
-        <li class="photo-grid__item">
-          <img src="./images/6_aldan.jpg" alt="Изображение реки Алдан" class="photo-grid__image">
-          <div class="photo-grid__description">
-            <h3 class="photo-grid__text">Алдан</h3>
-            <button type = "button" class="photo-grid__heart"></button>
-          </div>
-        </li>
       </ul>
     </section>
 
@@ -86,12 +44,50 @@
         </form>
       </div>
     </div>
+
+    <div class="popup popup__image">
+      <div class="popup__container">
+        <button type="reset" class="popup__close-button popup__close-button_image"></button>
+        <form name="popupContent" class="popup__content_image">
+          <h2 class="popup__title">Новое место</h2>
+          <input type="text" name="place" class="popup__text popup__text_type_place" required placeholder="Название Вашего места">
+          <input type="url" name="link" class="popup__text popup__text_type_link" required placeholder="Ссылка для вставки фото">
+          <input type="submit" class="popup__btn-submit" value="Сохранить">
+        </form>
+      </div>
+    </div>
+
+    <div class="popup popup__picture">
+      <div class="popup__container_picture">
+        <button type="reset" class="popup__close-button popup__close-button_picture"></button>
+        <div class="popup__content_picture">
+          <img src=" " alt="Изображение места" class="popup__picture-image">
+          <p class="popup__picture-discription"></p> 
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <footer class="footer body__footer">
     <p class="footer__copyright">&copy;2021 Mesto Russia</p>
   </footer>
 
+  <template class="template">
+    <li class="photo-grid__item task">
+      <img src=" " alt="Изображение места" class="photo-grid__image">
+      <button type = "button" class="photo-grid__delete">
+        <div class="photo-grid__delete_image-up"></div>
+        <div class="photo-grid__delete_image-down"></div>
+      </button>
+      <div class="photo-grid__description">
+        <h3 class="photo-grid__text"></h3>
+        <button type = "button" class="photo-grid__heart"></button>
+      </div>
+    </li>
+  </template>
+
+  <script src="./scripts/initial-cards.js"></script>
   <script src="./scripts/index.js"></script>
 </body>
 </html>
