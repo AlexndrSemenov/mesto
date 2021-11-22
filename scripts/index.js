@@ -78,7 +78,7 @@ list.append(...result);
 
 // открываем попап добавления карточек:
 const navButtonImage = document.querySelector ('.profile__nav-item-add');
-const popupImageElement = document.querySelector('.popup__image');
+const popupImageElement = document.querySelector('.popup_image');
 
 function openPopupImage() { //функция открытия попап для вставки карточек мест
   popupImageElement.classList.add('popup_opened');
@@ -100,7 +100,7 @@ closeButtonImage.addEventListener('click', closePopupImage);
 
 
 // вставляем данные из попапа на сайт:
-const popupContentImage = popupImageElement.querySelector('.popup__content_image');
+const popupContentImage = popupImageElement.querySelector('.popup__container_image');
 const places = popupImageElement.querySelector ('.popup__text_type_place');
 const links = popupImageElement.querySelector('.popup__text_type_link');
 
@@ -120,7 +120,7 @@ popupContentImage.addEventListener('submit', submitFormHandler);
 
 
 // закываем попап c картинкой:
-const popupPictureElement = document.querySelector('.popup__picture');
+const popupPictureElement = document.querySelector('.popup_picture');
 const closeButtonPicture = document.querySelector ('.popup__close-button_picture');
   closeButtonPicture.addEventListener('click', function () {
   popupPictureElement.classList.remove('popup_opened');
