@@ -1,35 +1,37 @@
-const popupContent = document.querySelector('.popup__form');
-const popupElement = document.querySelector('.popup');
-const navButton = document.querySelector('.profile__nav-item');
-const closeButton = popupElement.querySelector('.popup__close-button');
+const popupProfile = document.querySelector('.popup_profile');
 const userName = document.querySelector('.profile__user-name');
 const usersHobby = document.querySelector('.profile__users-hobby');
-const names = document.querySelector('.popup__text_type_name');
-const hobbies = document.querySelector('.popup__text_type_artist');
+const nameInput = document.querySelector('.popup__text_type_name');
+const hobbyInput = document.querySelector('.popup__text_type_artist');
+const pictureInPopup = document.querySelector('.popup__picture-image');
+const popupPictureDiscription = document.querySelector('.popup__picture-discription');
 
-//функция открытия попап редактирования данных пользователя
-function openPopup() {
-  names.value = userName.textContent;
-  hobbies.value = usersHobby.textContent;
-  popupElement.classList.add('popup_opened');
+//общая функция придания видимости попапам:
+function openPopup(popap) {
+  popap.classList.add('popup_opened');
 }
 
-//функция закрытия попап без сохранения введенных данных
-function closePopup() {
-  popupElement.classList.remove('popup_opened');
+//общая функция скрытия попапа:
+function closePopup(popap) {
+  popap.classList.remove('popup_opened');
 }
 
-//функция изменения данных на сайте через попап
-function renameName(evt) { 
+document.querySelector('.profile__nav-item').addEventListener('click', function () { //функция открытия попапа профиля:
+  nameInput.value = userName.textContent;
+  hobbyInput.value = usersHobby.textContent;
+  openPopup(popupProfile);
+});
+
+document.querySelector('.popup__form').addEventListener('submit', function (evt) { //функция изменения профиля и закрытия попапа:
   evt.preventDefault() //Эта строчка отменяет стандартную отправку формы. Так мы можем определить свою логику отправки. О том, как это делать, расскажем позже.
-  userName.textContent = names.value;
-  usersHobby.textContent = hobbies.value;
-  closePopup();
-}
+  userName.textContent = nameInput.value;
+  usersHobby.textContent = hobbyInput.value;
+  closePopup(popupProfile);
+});
 
-popupContent.addEventListener('submit', renameName);
-navButton.addEventListener('click', openPopup);
-closeButton.addEventListener('click', closePopup);
+popupProfile.querySelector('.popup__close-button').addEventListener('click', function () { //функция закрытия попапа профиля без сохранения введенных данных:
+  closePopup(popupProfile);
+});
 
 
 
@@ -43,27 +45,26 @@ const template = document.querySelector ('.template');
 
 const createTaskDomNode = function (item) {
   const taskTemplate = template.content.querySelector ('.task').cloneNode(true);
+  const pictureView = taskTemplate.querySelector ('.photo-grid__image');
   taskTemplate.querySelector ('.photo-grid__text').textContent = item.name;
-  taskTemplate.querySelector ('.photo-grid__image').src = item.link;
-  taskTemplate.querySelector ('.photo-grid__image').alt = item.name;
+  pictureView.src = item.link;
+  pictureView.alt = item.name;
   
   taskTemplate.querySelector('.photo-grid__heart').addEventListener('click', function (evt) {// ставим лайк
     evt.target.classList.toggle('photo-grid__heart_active');
   });
   
-  const cardsDelete = taskTemplate.querySelector('.photo-grid__delete');// удаляем карточку
-  cardsDelete.addEventListener('click', function () {
+  const cardsDelete = taskTemplate.querySelector('.photo-grid__delete');
+  cardsDelete.addEventListener('click', function () {// удаляем карточку
     const listItem = cardsDelete.closest('.task');
     listItem.remove();
   });
 
-  const pictureView = taskTemplate.querySelector ('.photo-grid__image');// показываем картинку в попап
-  const pictureInPopup = document.querySelector('.popup__picture-image');
-  const popupPictureDiscription = document.querySelector('.popup__picture-discription');
-  pictureView.addEventListener('click', function() {
-    pictureInPopup.src = pictureView.src;
+  pictureView.addEventListener('click', function() {// показываем фото в попап
+    pictureInPopup.src = item.link;
+    pictureInPopup.alt = item.name;
     popupPictureDiscription.textContent = taskTemplate.querySelector('.photo-grid__text').textContent;
-    popupPictureElement.classList.add('popup_opened');
+    openPopup(document.querySelector('.popup_picture'));
   });
   
   return taskTemplate;
@@ -77,34 +78,25 @@ list.append(...result);
 
 
 // открываем попап добавления карточек:
-const navButtonImage = document.querySelector ('.profile__nav-item-add');
 const popupImageElement = document.querySelector('.popup_image');
-
-function openPopupImage() { //функция открытия попап для вставки карточек мест
-  popupImageElement.classList.add('popup_opened');
-}
-
-navButtonImage.addEventListener('click', openPopupImage);
+document.querySelector ('.profile__nav-item-add').addEventListener('click', function () {
+  openPopup(popupImageElement);
+});
 
 
 
 // закрываем попап добавления карточек:
-const closeButtonImage = document.querySelector('.popup__close-button_image');
-
-function closePopupImage() { //функция закрытия попап для вставки карточек мест без сохранения введенных данных
-  popupImageElement.classList.remove('popup_opened');
-}
-
-closeButtonImage.addEventListener('click', closePopupImage);
+document.querySelector('.popup__close-button_image').addEventListener('click', function () {
+  closePopup (popupImageElement);
+});
 
 
 
 // вставляем данные из попапа на сайт:
-const popupContentImage = popupImageElement.querySelector('.popup__form-image');
 const places = popupImageElement.querySelector ('.popup__text_type_place');
 const links = popupImageElement.querySelector('.popup__text_type_link');
 
-const submitFormHandler = (evt) => {
+popupImageElement.querySelector('.popup__form-image').addEventListener('submit', function (evt) {
   evt.preventDefault();
   const inputValue = places.value;
   const urlValue = links.value;
@@ -112,16 +104,12 @@ const submitFormHandler = (evt) => {
   places.value = '';
   links.value = '';
   list.prepend(taskString);
-  closePopupImage();
- }
-
-popupContentImage.addEventListener('submit', submitFormHandler);
+  closePopup (popupImageElement);
+});
 
 
 
 // закываем попап c картинкой:
-const popupPictureElement = document.querySelector('.popup_picture');
-const closeButtonPicture = document.querySelector ('.popup__close-button_picture');
-  closeButtonPicture.addEventListener('click', function () {
-  popupPictureElement.classList.remove('popup_opened');
+document.querySelector ('.popup__close-button_picture').addEventListener('click', function () {
+  closePopup (document.querySelector('.popup_picture'));
 });
