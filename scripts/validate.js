@@ -111,7 +111,7 @@ const toggleButtonState = (inputList, buttonElement, inactiveButtonClass) => {
 
 
 enableValidation({
-  formSelector: '.form__field',
+  formSelector: '.popup__field',
   inputSelector: '.popup__text',
   submitButtonSelector: '.popup__btn-submit',
   inactiveButtonClass: 'popup__btn-submit_inactive',
