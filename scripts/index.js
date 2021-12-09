@@ -6,40 +6,42 @@ const hobbyInput = document.querySelector('.popup__text_type_artist');
 const pictureInPopup = document.querySelector('.popup__picture-image');
 const popupPictureDiscription = document.querySelector('.popup__picture-discription');
 const popupPicture = document.querySelector('.popup_picture');
+const buttonPopup = document.querySelector('.popup__btn-submit');
+const popups = document.querySelectorAll('.popup');
 
 
-const dubFan = (popap) => {
-  return function setEsCl (evt) {
-    if (evt.key === 'Escape' && popap.classList.contains('popup_opened')) {
-      closePopup(popap);
-      document.removeEventListener('keydown', setEsCl);
-    }
+//закрываем любой попап по нажатию на крестик без сохранения введенных данных
+popups.forEach((popup) => {
+  popup.addEventListener('click', (evt) => {
+      if (evt.target.classList.contains('popup_opened')) {
+          closePopup(popup);
+      }
+      if (evt.target.classList.contains('popup__close-button')) {
+        closePopup(popup);
+      }
+  })
+})
+
+
+function closeByEscape(evt) {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
   }
 }
 
+
 //общая функция придания видимости попапам:
 function openPopup(popap) {
-
-
-  
- 
-
-popap.classList.add('popup_opened');
-
-
-  const isValid = nameInput.value.length > 0 && hobbyInput.value.length > 0;
-    if (isValid) {
-     document.querySelector('.popup__btn-submit').removeAttribute('disabled');
-     document.querySelector('.popup__btn-submit').classList.remove('popup__btn-submit_inactive');
-    }
-
+  popap.classList.add('popup_opened');
 
 //скрываем попап по esc
-document.addEventListener('keydown', dubFan(popap));
+  document.addEventListener('keydown', closeByEscape);
+}
+
 
 //скрываем попап по клику
-const arr = [popupProfile,popupImageElement,popupPicture];
-arr.forEach(function (item) {
+popups.forEach(function (item) {
   item.addEventListener('mousedown', function (evt) {
     if(evt.target === evt.currentTarget) {
       closePopup(item);
@@ -47,10 +49,10 @@ arr.forEach(function (item) {
   });
 });
 
-}
 
 //общая функция скрытия попап:
 function closePopup(popap) {
+  document.removeEventListener('keydown', closeByEscape);
   popap.classList.remove('popup_opened');
 }
 
@@ -59,21 +61,14 @@ document.querySelector('.profile__nav-item').addEventListener('click', function 
   nameInput.value = userName.textContent;
   hobbyInput.value = usersHobby.textContent;
   openPopup(popupProfile);
-//   popap3.addEventListener('click', function(popap) {
-//     closePopup(popap);
-// });
 });
+
 
 document.querySelector('.popup__form').addEventListener('submit', function (evt) { //функция изменения профиля и закрытия попапа:
   evt.preventDefault(); //Эта строчка отменяет стандартную отправку формы. Так мы можем определить свою логику отправки.
   userName.textContent = nameInput.value;
   usersHobby.textContent = hobbyInput.value;
   
-  
-  closePopup(popupProfile);
-});
-
-popupProfile.querySelector('.popup__close-button').addEventListener('click', function () { //функция закрытия попапа профиля без сохранения введенных данных:
   closePopup(popupProfile);
 });
 
@@ -131,13 +126,6 @@ document.querySelector ('.profile__nav-item-add').addEventListener('click', func
 
 
 
-// закрываем попап добавления карточек:
-document.querySelector('.popup__close-button_image').addEventListener('click', function () {
-  closePopup (popupImageElement);
-});
-
-
-
 // вставляем данные из попапа на сайт:
 const places = popupImageElement.querySelector ('.popup__text_type_place');
 const links = popupImageElement.querySelector('.popup__text_type_link');
@@ -150,30 +138,10 @@ popupImageElement.querySelector('.popup__form-image').addEventListener('submit',
   places.value = '';
   links.value = '';
   list.prepend(taskString);
-  
-  
 
+//отключаем и задаем не активный класс кнопке Сохранить
+  popupImageElement.querySelector('.popup__btn-submit').setAttribute('disabled', true);
+  popupImageElement.querySelector('.popup__btn-submit').classList.add('popup__btn-submit_inactive');
 
-//задаем не активный класс кнопке Сохранить
-popupImageElement.querySelector('.popup__btn-submit').setAttribute('disabled', true);
-popupImageElement.querySelector('.popup__btn-submit').classList.add('popup__btn-submit_inactive');
-
-  
-  
-  
   closePopup (popupImageElement);
 });
-
-
-
-// закываем попап c картинкой:
-document.querySelector ('.popup__close-button_picture').addEventListener('click', function () {
-  closePopup (popupPicture);
-});
-
-
-
-
-
-
-
