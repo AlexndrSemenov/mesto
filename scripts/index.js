@@ -1,23 +1,63 @@
-const popupProfile = document.querySelector('.popup_profile');
+export { openPopup }
+import { Card } from './Card.js';
+import { FormValidator } from './FormValidator.js';
+
+
 const userName = document.querySelector('.profile__user-name');
 const usersHobby = document.querySelector('.profile__users-hobby');
 const nameInput = document.querySelector('.popup__text_type_name');
 const hobbyInput = document.querySelector('.popup__text_type_artist');
-const pictureInPopup = document.querySelector('.popup__picture-image');
-const popupPictureDiscription = document.querySelector('.popup__picture-discription');
-const popupPicture = document.querySelector('.popup_picture');
-const buttonPopup = document.querySelector('.popup__btn-submit');
-const buttonEditProfile = document.querySelector('.profile__nav-item');
-const buttonAddCard = document.querySelector('.profile__nav-item-add');
-const popupProfilForm = document.querySelector('.popup__form');
 const list = document.querySelector('.photo-grid__table');
-const template = document.querySelector('.template');
-const popupImageElement = document.querySelector('.popup_image');
-const places = popupImageElement.querySelector('.popup__text_type_place');
-const links = popupImageElement.querySelector('.popup__text_type_link');
-const popupImageSubmitButton = popupImageElement.querySelector('.popup__btn-submit');
-const popupImageForm = popupImageElement.querySelector('.popup__form-image');
 const popups = document.querySelectorAll('.popup');
+
+
+//объекты настроек всеx нужныx функциям классов и селекторов элементов
+const config = {
+  formSelector: '.popup__field',
+  inputSelector: '.popup__text',
+  submitButtonSelector: '.popup__btn-submit',
+  inactiveButtonClass: 'popup__btn-submit_inactive',
+  inputErrorClass: 'popup__text_type_error',
+  errorClass: 'popup__text-error_active',
+}
+
+//вызываем валидацию полей в попапе редактирования профиля
+const profilFormValidator = new FormValidator(config, '.popup__form');
+profilFormValidator.enableValidation();
+
+
+//вызываем валидацию полей в попапе добавления карточки
+const imageFormValidator = new FormValidator(config, '.popup__form-image');
+imageFormValidator.enableValidation();
+
+
+//карточки вставляемые на страницу при загрузке сайта
+const initialCards = [
+  {
+    name: 'Архыз',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+  },
+  {
+    name: 'Челябинская область',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+  },
+  {
+    name: 'Иваново',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+  },
+  {
+    name: 'Камчатка',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+  },
+  {
+    name: 'Холмогорский район',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+  },
+  {
+    name: 'Байкал',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+  }
+];
 
 
 //закрываем любой попап по нажатию на крестик без сохранения введенных данных
@@ -57,12 +97,16 @@ function closePopup(popap) {
 }
 
 
+//работа с попапом профиля__________________________________________________________________
+const popupProfile = document.querySelector('.popup_profile');
+const buttonEditProfile = document.querySelector('.profile__nav-item');
+const popupProfilForm = document.querySelector('.popup__form');
+
 buttonEditProfile.addEventListener('click', function () { //функция открытия попапа профиля:
   nameInput.value = userName.textContent;
   hobbyInput.value = usersHobby.textContent;
   openPopup(popupProfile);
 });
-
 
 popupProfilForm.addEventListener('submit', function (evt) { //функция изменения профиля и закрытия попапа:
   evt.preventDefault(); //Эта строчка отменяет стандартную отправку формы. Так мы можем определить свою логику отправки.
@@ -71,70 +115,52 @@ popupProfilForm.addEventListener('submit', function (evt) { //функция и�
   
   closePopup(popupProfile);
 });
+//-----------------------------------------------------------------------------------------
 
 
+// открываем попап добавления карточек:____________________________________________________
+const buttonAddCard = document.querySelector('.profile__nav-item-add');
+const popupImageElement = document.querySelector('.popup_image');
 
-// конец 4го спринта
-
-
-
-// вставляем 6 карточек из шаблона:
-const createTaskDomNode = function (item) {
-  const taskTemplate = template.content.querySelector('.task').cloneNode(true);
-  const pictureView = taskTemplate.querySelector('.photo-grid__image');
-  taskTemplate.querySelector('.photo-grid__text').textContent = item.name;
-  pictureView.src = item.link;
-  pictureView.alt = item.name;
-  
-  taskTemplate.querySelector('.photo-grid__heart').addEventListener('click', function (evt) {// ставим лайк
-    evt.target.classList.toggle('photo-grid__heart_active');
-  });
-  
-  const cardsDelete = taskTemplate.querySelector('.photo-grid__delete');
-  cardsDelete.addEventListener('click', function () {// удаляем карточку
-    const listItem = cardsDelete.closest('.task');
-    listItem.remove();
-  });
-
-  
-
-  pictureView.addEventListener('click', function() {// показываем фото в попап
-    pictureInPopup.src = item.link;
-    pictureInPopup.alt = item.name;
-    popupPictureDiscription.textContent = taskTemplate.querySelector('.photo-grid__text').textContent;
-    openPopup(popupPicture);
-  });
-  
-  return taskTemplate;
-}
-
-const result = initialCards.map(function (item) {
-  return createTaskDomNode(item);
-});
-list.append(...result);
-
-
-
-// открываем попап добавления карточек:
 buttonAddCard.addEventListener('click', function () {
   openPopup(popupImageElement);
 });
+//-----------------------------------------------------------------------------------------
 
 
+// вставляем данные из попапа карточек на сайт:____________________________________________
+const popupImageForm = popupImageElement.querySelector('.popup__form-image');
+const places = popupImageElement.querySelector('.popup__text_type_place');
+const links = popupImageElement.querySelector('.popup__text_type_link');
+const popupImageSubmitButton = popupImageElement.querySelector('.popup__btn-submit');
 
-// вставляем данные из попапа на сайт:
 popupImageForm.addEventListener('submit', function (evt) {
   evt.preventDefault();
   const inputValue = places.value;
   const urlValue = links.value;
-  const taskString = createTaskDomNode({ name: inputValue, link: urlValue, })
-  places.value = '';
+  renderCards([{name: inputValue, link: urlValue}]);//отрисовываем карточку с данными попапа на странице
   links.value = '';
-  list.prepend(taskString);
-
-//отключаем и задаем не активный класс кнопке Сохранить
+  places.value = '';
+  //отключаем и задаем не активный класс кнопке Сохранить
   popupImageSubmitButton.setAttribute('disabled', true);
   popupImageSubmitButton.classList.add('popup__btn-submit_inactive');
 
   closePopup (popupImageElement);
 });
+//-----------------------------------------------------------------------------------
+
+
+//функция отрисовки карточек из переданного массива по шаблону____________
+function renderCards(arr) {
+  arr.forEach((item) => {
+    const card = new Card(item, '.template');
+    const taskTemplate = card.generateCard();
+
+    // Добавляем в DOM
+    list.prepend(taskTemplate);
+  });
+}
+//-----------------------------------------------------------------------------------
+
+//отрисовываем карточки при загрузке страницы
+renderCards(initialCards);
