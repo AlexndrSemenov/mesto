@@ -1,6 +1,7 @@
 .photo-grid__table {
   display: flex;
   flex-wrap: wrap;
+  min-height: 34vh;
   padding: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

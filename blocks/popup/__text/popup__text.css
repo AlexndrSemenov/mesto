@@ -1,5 +1,6 @@
 .popup__text {
-  margin-top: 15px;
+  position: relative;
+  margin-top: 25px;
   margin-bottom: 5px;
   font-size: 14px;
   line-height: 16.94px;

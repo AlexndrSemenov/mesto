@@ -1,4 +1,5 @@
-export { openPopup }
+export { closeByEscape }
+import { openPopup } from './utils.js';
 import { Card } from './Card.js';
 import { FormValidator } from './FormValidator.js';
 
@@ -20,6 +21,7 @@ const config = {
   inputErrorClass: 'popup__text_type_error',
   errorClass: 'popup__text-error_active',
 }
+
 
 //вызываем валидацию полей в попапе редактирования профиля
 const profilFormValidator = new FormValidator(config, '.popup__form');
@@ -81,15 +83,6 @@ function closeByEscape(evt) {
 }
 
 
-//общая функция придания видимости попапам:
-function openPopup(popap) {
-  popap.classList.add('popup_opened');
-
-//скрываем попап по esc
-  document.addEventListener('keydown', closeByEscape);
-}
-
-
 //общая функция скрытия попап:
 function closePopup(popap) {
   document.removeEventListener('keydown', closeByEscape);
@@ -130,22 +123,19 @@ buttonAddCard.addEventListener('click', function () {
 
 // вставляем данные из попапа карточек на сайт:____________________________________________
 const popupImageForm = popupImageElement.querySelector('.popup__form-image');
-const places = popupImageElement.querySelector('.popup__text_type_place');
-const links = popupImageElement.querySelector('.popup__text_type_link');
-const popupImageSubmitButton = popupImageElement.querySelector('.popup__btn-submit');
+const place = popupImageElement.querySelector('.popup__text_type_place');
+const link = popupImageElement.querySelector('.popup__text_type_link');
 
 popupImageForm.addEventListener('submit', function (evt) {
   evt.preventDefault();
-  const inputValue = places.value;
-  const urlValue = links.value;
+  const inputValue = place.value;
+  const urlValue = link.value;
   renderCards([{name: inputValue, link: urlValue}]);//отрисовываем карточку с данными попапа на странице
-  links.value = '';
-  places.value = '';
-  //отключаем и задаем не активный класс кнопке Сохранить
-  popupImageSubmitButton.setAttribute('disabled', true);
-  popupImageSubmitButton.classList.add('popup__btn-submit_inactive');
-
   closePopup (popupImageElement);
+  link.value = '';
+  place.value = '';
+  const disableButton = new FormValidator(config, '.popup__form-image');//отключаем кнопку
+  disableButton.disableButton();
 });
 //-----------------------------------------------------------------------------------
 
@@ -160,7 +150,7 @@ function renderCards(arr) {
     list.prepend(taskTemplate);
   });
 }
-//-----------------------------------------------------------------------------------
+//------------------------------------------------------------------------
 
 //отрисовываем карточки при загрузке страницы
 renderCards(initialCards);
