@@ -1,8 +1,3 @@
-//import { pictureInPopup, popupPictureDiscription, popupPicture } from './utils.js';
-// import PopupWithImage from './PopupWithImage.js';
-
-// const popupIma = new PopupWithImage('.popup_picture');
-
 export default class Card {
   constructor(data, cardSelector, handleCardClick) {
     this._name = data.name;
@@ -20,13 +15,16 @@ export default class Card {
       .cloneNode(true);
     return taskTemplate;
   }
+  
   _handleLike = () => {
     this._element.querySelector('.photo-grid__heart').classList.toggle('photo-grid__heart_active');
     }
+
   _handleDeleteCard = () => {
     this._element.querySelector('.photo-grid__delete').closest('.task').remove();
     this._element = null;
   }
+
   generateCard() {
     this._element = this._getTemplate();
     // ставим лайк

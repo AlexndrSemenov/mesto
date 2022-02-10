@@ -1,4 +1,4 @@
-export class FormValidator {
+export default class FormValidator {
   constructor(config, formElement) {
     this._config = config;
     this._formElement = document.querySelector(formElement);
@@ -68,7 +68,7 @@ export class FormValidator {
   //меняем стиль кнопки попапа
   _toggleButtonState = () => {
     //проверяем валидность формы
-     const isFormValid = this._formElement.checkValidity();
+    const isFormValid = this._formElement.checkValidity();
     //если форма невалидна добавляем кнопке класс
     this._buttonElement.classList.toggle(this._inactiveButtonClass, !isFormValid);
     //если форма невалидна присваеваем свойству disabled кнопки значение true

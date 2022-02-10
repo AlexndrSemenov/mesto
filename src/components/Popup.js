@@ -7,7 +7,6 @@ export default class Popup {
   open() {
     this._container.classList.add('popup_opened');
     this._handleEscClose();
-    this._setEventListeners();
   }
 
   //общая функция скрытия попап:
@@ -25,7 +24,7 @@ export default class Popup {
   }
 
   //добавляем обработчик клика иконке закрытия, закрываем попап кликом на затемненную область
-  _setEventListeners() {
+  setEventListeners() {
     document.addEventListener('click', (evt) => {
       if (evt.target.classList.contains('popup_opened')) {
         this._container.classList.remove('popup_opened');
