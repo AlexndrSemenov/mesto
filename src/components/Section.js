@@ -5,13 +5,16 @@ export default class Section {
     this._container = document.querySelector(containerSelector);
   }
 
-  addItem(element) {
-    this._container.prepend(element);
+  //создаем карточку и вставляем ее в DOM
+  addItem(item) {
+    const card = this._renderer(item);
+    this._container.prepend(card);
   }
 
+  //перебираем изначальный массив
   renderItems() {
     this._renderedItems.forEach(item => {
-      this._renderer(item);
+      this.addItem(item);
     });
   }
 }

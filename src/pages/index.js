@@ -1,5 +1,5 @@
 import './index.css';
-import {  initialCards, nameInput, hobbyInput, list, popupProfile, buttonEditProfile, buttonAddCard, popupImageElement, config } from '../components/utils.js';
+import {  initialCards, nameInput, hobbyInput, list, popupProfile, buttonEditProfile, buttonAddCard, popupImageElement, config } from '../utils/constants.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 import Section from '../components/Section.js';
@@ -54,7 +54,7 @@ popupProfileForm.setEventListeners();
 const popupWithImage = new PopupWithImage('.popup_picture');
 popupWithImage.setEventListeners();
 
-//нажатие кнопки редактирования профиля
+//нажатие кнопки добавления карточки
 buttonAddCard.addEventListener('click', () => { //функция открытия попапа профиля:
   popupImageForm.open();
 });
@@ -63,9 +63,8 @@ buttonAddCard.addEventListener('click', () => { //функция открыти�
 const popupImageForm = new PopupWithForm (
   popupImageElement,
   (item) => {
-    const cardAdd = new Card(item, '.template', (item) => {popupWithImage.open(item)});
-    const taskTemplateAdd = cardAdd.generateCard();
-    document.querySelector(list).prepend(taskTemplateAdd);
+    //из данных всех полей попапа (item) создаем карточку и вставляем ее в DOM
+    initialCardList.addItem(item);
     //отключаем кнопку
     imageFormValidator.disableButton();
   }
@@ -77,11 +76,14 @@ popupImageForm.setEventListeners();
 //отрисовываем карточки при загрузке страницы
   const initialCardList = new Section({
     items: initialCards,
+    //функция создания карточки (без вставки ее в DOM)
     renderer: (item) => {
       const card = new Card(item, '.template', (item) => {popupWithImage.open(item)});
       const taskTemplate = card.generateCard();
-      initialCardList.addItem(taskTemplate);
+      //возвращаем готовую карточку с установленными обработчиками
+      return taskTemplate;
     }
   }, list);
-  //отрисовываем карточки
+
+  //вставляем карточки в DOM
   initialCardList.renderItems();
