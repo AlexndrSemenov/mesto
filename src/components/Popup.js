@@ -17,13 +17,11 @@ export default class Popup {
     document.removeEventListener('keydown', this._handleEscClose);
   }
 
-  //закрываем попап по нажатию на esc
-  _handleEscClose() {
-    document.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Escape') {
-        this._container.classList.remove('popup_opened');
-      }
-    });
+  //закрываем попап по нажатию на esc (навешиваем обработчик правильно)
+  _handleEscClose(evt) {
+    if (evt.key === 'Escape') {
+      this.close();
+    }
   }
 
   //добавляем обработчик клика иконке закрытия, закрываем попап кликом на затемненную область
