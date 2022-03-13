@@ -9,13 +9,11 @@ export default class FormValidator {
     this._errorClass = config.errorClass;
   }
 
-
   //публичный метод, который отключает кнопку
   disableButton() {
     this._buttonElement.setAttribute('disabled', true);
     this._buttonElement.classList.add(this._inactiveButtonClass);
   }
-
 
   //публичный метод, который включает валидацию формы
   enableValidation() {

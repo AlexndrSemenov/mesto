@@ -7,6 +7,7 @@ export default class Section {
 
   //создаем карточку и вставляем ее в DOM
   addItem(item) {
+    //debugger;
     const card = this._renderer(item);
     this._container.prepend(card);
   }

@@ -14,7 +14,7 @@ export default class UserInfo {
 
   //принимаем новые данные пользователя и вставляем их на страницу
   setUserInfo(item) {
-    this._name.textContent = item.initials;
-    this._profession.textContent = item.profession;
+    this._name.textContent = item.name;
+    this._profession.textContent = item.about;
   }
 }

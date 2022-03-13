@@ -16,13 +16,15 @@
 
   <main class="page">
     <section class="profile body__profile">
-      <img src="<%=require('./images/Jacques_Yves_Cousteau.jpg')%>" alt="Аватар пользователя" class="profile__avatar">
+      <div class="profile__avatar-wrapper">
+        <img src=" " alt="Аватар пользователя" class="profile__avatar">
+      </div>
       <div class="profile__description">
         <div class="profile__wrapper">
-          <h1 class="profile__user-name">Жак-Ив Кусто</h1>
+          <h1 class="profile__user-name"></h1>
           <button type="button" class="profile__nav-item" aria-label="Редактировать профиль"></button>
         </div>
-        <p class="profile__users-hobby">Исследователь океана</p>
+        <p class="profile__users-hobby"></p>
       </div>
       <button type="button" class="profile__nav-item-add"></button>
     </section>
@@ -32,6 +34,7 @@
       </ul>
     </section>
     
+    <!-- попап редактирования профиля -->
     <div class="popup popup_profile">
       <div class="popup__container">
         <button type="reset" class="popup__close-button"></button>
@@ -44,11 +47,12 @@
           <input id="popup__profession" type="text" name="profession" class="popup__text popup__text_type_artist" required placeholder="Ваша профессия" minlength="2" maxlength="200">
           <span class="popup__profession-error"></span>
           
-          <input type="submit" class="popup__btn-submit popup__btn-submit_inactive" value="Сохранить">
+          <input type="submit" class="popup__btn-submit popup__btn-submit_inactive" value=" ">
         </form>
       </div>
     </div>
 
+    <!-- попап создания новой карточки -->
     <div class="popup popup_image">
       <div class="popup__container">
         <button type="reset" class="popup__close-button"></button>
@@ -61,11 +65,12 @@
           <input id="popup__link" type="url" name="link" class="popup__text popup__text_type_link" required placeholder="Ссылка для вставки фото">
           <span class="popup__link-error"></span>
 
-          <input type="submit" class="popup__btn-submit popup__btn-submit_inactive" value="Сохранить">
+          <input type="submit" class="popup__btn-submit popup__btn-submit_inactive" value=" ">
         </form>
       </div>
     </div>
 
+    <!-- попап отображения картинки по клику в большом размере -->
     <div class="popup popup_picture">
       <div class="popup__container-picture">
         <button type="reset" class="popup__close-button"></button>
@@ -76,12 +81,39 @@
       </div>
     </div>
 
+    <!-- попап обновления аватара пользователя -->
+    <div class="popup popup_avatar">
+      <div class="popup__container">
+        <button type="reset" class="popup__close-button"></button>
+        <form name="popupContent" class="popup__form-avatar popup__field" novalidate>
+          <h2 class="popup__title">Обновить аватар</h2>
+          
+          <input id="popup__link" type="url" name="link" class="popup__text popup__text_type_link" required placeholder="Ссылка для вставки изображения аватарки">
+          <span class="popup__link-error"></span>
+
+          <input type="submit" class="popup__btn-submit popup__btn-submit_inactive" value=" ">
+        </form>
+      </div>
+    </div>
+
+    <!-- попап подтверждения удаления карточки -->
+    <div class="popup popup_deletecard">
+      <div class="popup__container popup__container_delete">
+        <button type="reset" class="popup__close-button"></button>
+        <form name="popupContent" class="popup__form-deletecard popup__field" novalidate>
+          <h2 class="popup__title_delete">Вы уверены?</h2>
+          <input type="submit" class="popup__btn-submit popup__btn-submit_delete" value="Да">
+        </form>
+      </div>
+    </div>
+
   </main>
 
   <footer class="footer body__footer">
     <p class="footer__copyright">&copy;2021 Mesto Russia</p>
   </footer>
 
+  <!-- заготовка карточки на странице -->
   <template class="template">
     <li class="photo-grid__item task">
       <img src=" " alt="Изображение места" class="photo-grid__image">
@@ -91,7 +123,10 @@
       </button>
       <div class="photo-grid__description">
         <h3 class="photo-grid__text"></h3>
-        <button type = "button" class="photo-grid__heart"></button>
+        <div class="photo-grid__wrapper">
+          <button type = "button" class="photo-grid__heart"></button>
+          <div class="photo-grid__likes"></div>
+        </div>
       </div>
     </li>
   </template>

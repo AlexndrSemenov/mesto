@@ -1,9 +1,17 @@
+.popup__container_delete {
+  
+  width: 430px;
+  max-height: 181px;
+  padding: 34px 36px;
+ 
+}
+
 .popup__container {
   position: relative;
   border-radius: 10px;
   background-color: #fff;
   max-width: 430px;
-  min-height: 330px;
+  /* min-height: 330px; */
   padding: 34px 36px 37px 36px;
   box-sizing: border-box;
   margin: 0 auto;
