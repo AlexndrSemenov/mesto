@@ -9,6 +9,17 @@ import PopupWithImage from '../components/PopupWithImage.js';
 import Api from '../components/Api.js';
 import PopupWithConfirmation from '../components/PopupWithConfirmation.js';
 
+//подготовительная работа для глобальной видимости___________________________________
+//объявляем переменную, чтобы впоследствие записать в нее значение id пользователя и передать это значение в класс card
+let userId;
+
+//передаем в userData координаты данных пользователя на странице
+const userData = new UserInfo ({
+  nameSelector: '.profile__user-name',
+  professionSelector: '.profile__users-hobby',
+  avatarSelector: '.profile__avatar'
+  }
+);
 
 
 
@@ -37,7 +48,7 @@ api.getTasks()
       //функция создания карточки (без вставки ее в DOM)
       renderer: (item) => {
         //debugger;
-        const card = new Card(item, '.template', (item) => {popupWithImage.open(item)}, api, popupDeleteForm);
+        const card = new Card(item, '.template', (item) => {popupWithImage.open(item)}, api, popupDeleteForm, userId);
         const taskTemplate = card.generateCard();
         //возвращаем готовую карточку с установленными обработчиками
         return taskTemplate;
@@ -60,6 +71,7 @@ api.getTasks()
           initialCardList.addItem({ name: data.name, link: data.link, likes: data.likes, owner: data.owner, _id: data._id });
           //отключаем кнопку
           imageFormValidator.disableButton();
+          popupImageForm.close();
           })
           .catch(err => console.log(err));
       }
@@ -117,13 +129,9 @@ apiUser.getTasks()
     userName.textContent = data.name;
     usersHobby.textContent = data.about;
     usersAvatar.src = data.avatar;
-
-    //передаем в userData координаты данных пользователя на странице
-    const userData = new UserInfo ({
-      nameSelector: '.profile__user-name',
-      professionSelector: '.profile__users-hobby'
-      }
-    );
+    
+    //записываем id пользователя в переменную для передачи в класс Card
+    userId = data._id;
 
     //нажатие кнопки редактирования профиля
     buttonEditProfile.addEventListener('click', () => {
@@ -144,6 +152,7 @@ apiUser.getTasks()
       apiUser.updateUser({ name: item.initials , about: item.profession })
         .then((data) => {
         userData.setUserInfo(data);
+        popupProfileForm.close();
       })
       .catch(err => console.log(err));
      }
@@ -175,9 +184,10 @@ const popupAvatarForm = new PopupWithForm (
     //отправляем на сервер объект с одним полем (данными введенными пользователем в попап), после чего сервер возвращает другой объект (data) - его и отрисовываем на странице
     apiUserAvatar.updateUser({ avatar: item.link })
       .then(data => {
-        usersAvatar.src = data.avatar;
+        userData.setAvatar(data);
         //отключаем кнопку
         avatarFormValidator.disableButton();
+        popupAvatarForm.close();
       })
       .catch(err => console.log(err));
   }
@@ -196,15 +206,19 @@ usersAvatar.addEventListener('click', () => {
 
 
 //работа с попапом удаления________________________________________________________
+
 const popupDeleteForm = new PopupWithConfirmation (
   popupDeleteCard,
   (data) => {
   api.deleteTask(data.id)
     .then(() => {
-      //debugger;
       data.remove();
       data = null;
+      popupDeleteForm.close();
     })
     .catch(err => console.log(err));
   }
-)
+);
+
+//назначаем слушатель событию submit попапа подтверждения удаления карточки:
+popupDeleteForm.setEventListeners();

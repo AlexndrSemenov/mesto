@@ -8,12 +8,18 @@ export default class PopupWithConfirmation extends Popup {
   }
  
   //назначаем обработчик сабмита формы
-  setEventListeners(data) {
+  setEventListeners() {
     super.setEventListeners();
     this._popupForm.addEventListener('submit', (evt) => {
       evt.preventDefault();
-      this._handleFormCallBack(data);
-      this.close();
+      this._handleFormCallBack(this._card);
     });
+  }
+
+  //назначаем обработчик сабмита формы
+  open(card) {
+    super.open();
+    //передаем объект, на котором произошло открытие попапа, в метод setEventListeners()
+    this._card = card;
   }
 }
