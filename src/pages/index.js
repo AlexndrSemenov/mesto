@@ -9,12 +9,14 @@ import PopupWithImage from '../components/PopupWithImage.js';
 import Api from '../components/Api.js';
 import PopupWithConfirmation from '../components/PopupWithConfirmation.js';
 
+
 //подготовительная работа для глобальной видимости___________________________________
 //объявляем переменную, чтобы впоследствие записать в нее значение id пользователя и передать это значение в класс card
 let userId;
 
+
 //передаем в userData координаты данных пользователя на странице
-const userData = new UserInfo ({
+const userSelector = new UserInfo ({
   nameSelector: '.profile__user-name',
   professionSelector: '.profile__users-hobby',
   avatarSelector: '.profile__avatar'
@@ -22,20 +24,65 @@ const userData = new UserInfo ({
 );
 
 
-
-//работа с попапом добавления карточек_______________________________________________
-
 const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort36/cards', 
+  url: 'https://mesto.nomoreparties.co/v1/cohort36/', 
   headers: {
     authorization: '6e4736b7-6cd6-4abb-a799-2940e7d04a53',
     'Content-Type': 'application/json'
   }
 });
 
-//получаем с сервера список карточек - data
-api.getTasks()
-  .then(data => {
+
+//Объединяем запрос данных профиля и получения карточек в один общий запрос с помощью Promise.all, иначе может возникнуть проблема, что _id пользователя еще не получили, а карточки уже пришли, и будут некорректно отображаться лайки и кнопки удаления на собственных карточках
+
+Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser('cards')])
+  .then(([userData, cards]) => {
+
+    
+    
+    
+    // Установка данных пользователя
+    
+    //отрисовываем данные пользователя с сервера на странице
+    const getUserInfoFromServer = userSelector.getUserInfoFromServer(userData);
+    userName.textContent = getUserInfoFromServer.name;
+    usersHobby.textContent = getUserInfoFromServer.profession;
+    usersAvatar.src = getUserInfoFromServer.avatar;
+    userId = getUserInfoFromServer.id;
+
+    //нажатие кнопки редактирования профиля
+    buttonEditProfile.addEventListener('click', () => {
+      //открываем попап
+      popupProfileForm.open();
+ 
+      //вставляем данные пользователя со страницы в попап
+      const getUserInfo = userSelector.getUserInfo();
+      //вставляю в попап эти данные
+      nameInput.value = getUserInfo.name;
+      hobbyInput.value = getUserInfo.profession;
+    });
+
+    //создаем экземпляр класса для записывания данных из попапа на сайт
+    const popupProfileForm = new PopupWithForm (
+      popupProfile,
+      //посылаем на сервер данные из попапа (item), сервер возвращает объект (data) - его поля показываем на странице
+      (item) => {
+      api.updateUser('users/me', { name: item.initials , about: item.profession })
+        .then((data) => {
+          userSelector.setUserInfo(data);
+          popupProfileForm.close();
+        })
+        .catch(err => console.log(err));
+      }
+    );
+
+    //назначаем слушатель события submit:
+    popupProfileForm.setEventListeners();
+
+
+
+
+    // Отрисовка карточек
 
     //создаем экземпляр класса
     const popupWithImage = new PopupWithImage('.popup_picture');
@@ -44,7 +91,7 @@ api.getTasks()
     
     //отрисовываем карточки при загрузке страницы
     const initialCardList = new Section({
-      items: data,
+      items: cards,
       //функция создания карточки (без вставки ее в DOM)
       renderer: (item) => {
         //debugger;
@@ -65,12 +112,10 @@ api.getTasks()
       //this._handleFormCallBack(6 строчек вниз) принимает данные всех полей формы
       (item) => {
         //отправляем на сервер объект с двумя полями (данными введенными пользователем в попап), после чего сервер возвращает другой объект (data) - его и отрисовываем на странице
-        api.createTask({ name: item.name , link: item.link })
+        api.createCard('cards', { name: item.name , link: item.link })
           .then((data) => {
           //из данных, пришедших с сервера, создаем карточку и вставляем ее в DOM
           initialCardList.addItem({ name: data.name, link: data.link, likes: data.likes, owner: data.owner, _id: data._id });
-          //отключаем кнопку
-          imageFormValidator.disableButton();
           popupImageForm.close();
           })
           .catch(err => console.log(err));
@@ -82,11 +127,16 @@ api.getTasks()
   
     //нажатие кнопки добавления карточки
     buttonAddCard.addEventListener('click', () => { 
+    //отключаем кнопку
+    imageFormValidator.disableButton();
     //функция открытия попапа добавления карточки:
     popupImageForm.open();
     });
+
+
+
+
   })
-  
   .catch(err => console.log(err));
 
 
@@ -109,84 +159,46 @@ const avatarFormValidator = new FormValidator(config, '.popup__form-avatar');
 avatarFormValidator.enableValidation();
 
 
+// //Этот вариант для валидации полей не хочет работать, как ни старался
+// //Можно универсально создать экземпляры валидаторов всех форм, поместив их все в один объект, а потом брать из него валидатор по атрибуту name, который задан для формы. Это очень универсально и для любого кол-ва форм подходит.
+// const formValidators = {}
 
+// // Включение валидации
+// const enableValidation = (config) => {
+//   const formList = Array.from(document.querySelectorAll(config.formSelector))
+//   formList.forEach((formElement) => {
+//     const validator = new FormValidator(formElement, config)
+// // получаем данные из атрибута `name` у формы
+//     const formName = formElement.getAttribute('name')
 
-//работа с попапом редактирования профиля______________________________________________
+//    // вот тут в объект записываем под именем формы
+//     formValidators[formName] = validator;
+//    validator.enableValidation();
+//   });
+// };
 
-const apiUser = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort36/users/me', 
-  headers: {
-    authorization: '6e4736b7-6cd6-4abb-a799-2940e7d04a53',
-    'Content-Type': 'application/json'
-  }
-});
+// enableValidation(config);
 
-//получаем данные пользователя с сервера (data)
-apiUser.getTasks()
-  .then(data => {
-    
-    //отрисовываем данные пользователя с сервера на странице
-    userName.textContent = data.name;
-    usersHobby.textContent = data.about;
-    usersAvatar.src = data.avatar;
-    
-    //записываем id пользователя в переменную для передачи в класс Card
-    userId = data._id;
+// //И теперь можно использовать валидаторы для деактивации кнопки и тд
 
-    //нажатие кнопки редактирования профиля
-    buttonEditProfile.addEventListener('click', () => {
-      //открываем попап
-      popupProfileForm.open();
- 
-      //вставляем данные пользователя со страницы в попап
-      const getUserInfo = userData.getUserInfo();
-      nameInput.value = getUserInfo.name;
-      hobbyInput.value = getUserInfo.profession;
-    });
+// formValidators[ profileForm.getAttribute('name') ].resetValidation()
 
-    //создаем экземпляр класса для записывания данных из попапа на сайт
-    const popupProfileForm = new PopupWithForm (
-      popupProfile,
-      //посылаем на сервер данные из попапа (item), сервер возвращает объект (data) - его поля показываем на странице
-      (item) => {
-      apiUser.updateUser({ name: item.initials , about: item.profession })
-        .then((data) => {
-        userData.setUserInfo(data);
-        popupProfileForm.close();
-      })
-      .catch(err => console.log(err));
-     }
-    );
-
-    //назначаем слушатель события submit:
-    popupProfileForm.setEventListeners();
-  })
-
-  .catch(err => console.log(err));
+// // или можно использовать строку (ведь Вы знаете, какой атрибут `name` у каждой формы)
+// formValidators['profile-form'].resetValidation()
 
 
 
 
 //работа с изменением аватарки пользователя____________________________________________
 
-const apiUserAvatar = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort36/users/me/avatar', 
-  headers: {
-    authorization: '6e4736b7-6cd6-4abb-a799-2940e7d04a53',
-    'Content-Type': 'application/json'
-  }
-});
-
 //отрисовываем аватар с картинкой пользователя
 const popupAvatarForm = new PopupWithForm (
   popupAvatar,
   (item) => {
     //отправляем на сервер объект с одним полем (данными введенными пользователем в попап), после чего сервер возвращает другой объект (data) - его и отрисовываем на странице
-    apiUserAvatar.updateUser({ avatar: item.link })
+    api.updateUser('users/me/avatar', { avatar: item.link })
       .then(data => {
-        userData.setAvatar(data);
-        //отключаем кнопку
-        avatarFormValidator.disableButton();
+        userSelector.setAvatar(data);
         popupAvatarForm.close();
       })
       .catch(err => console.log(err));
@@ -198,6 +210,8 @@ popupAvatarForm.setEventListeners();
 
 //нажатие кнопки редактирования аватара
 usersAvatar.addEventListener('click', () => { 
+  //отключаем кнопку
+  avatarFormValidator.disableButton();
   //функция открытия попапа изменения аватара:
   popupAvatarForm.open();
 });
@@ -210,7 +224,7 @@ usersAvatar.addEventListener('click', () => {
 const popupDeleteForm = new PopupWithConfirmation (
   popupDeleteCard,
   (data) => {
-  api.deleteTask(data.id)
+  api.confirmationDeletion('cards', data.id)
     .then(() => {
       data.remove();
       data = null;

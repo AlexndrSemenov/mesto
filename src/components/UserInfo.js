@@ -13,6 +13,15 @@ export default class UserInfo {
     return userInfo;
   }
 
+  getUserInfoFromServer(data) {
+    const userInfoFromServer = {}
+    userInfoFromServer.name = data.name;
+    userInfoFromServer.profession = data.about;
+    userInfoFromServer.avatar = data.avatar;
+    userInfoFromServer.id = data._id;
+    return userInfoFromServer;
+  }
+
   //принимаем новые данные пользователя и вставляем их на страницу
   setUserInfo(item) {
     this._name.textContent = item.name;
