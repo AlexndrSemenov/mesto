@@ -1,5 +1,5 @@
 import './index.css';
-import {  userName, usersHobby, usersAvatar, nameInput, hobbyInput, list, popupProfile, buttonEditProfile, buttonAddCard, popupImageElement, popupAvatar, popupDeleteCard, config } from '../utils/constants.js';
+import { usersAvatar, nameInput, hobbyInput, list, popupProfile, buttonEditProfile, buttonAddCard, popupImageElement, popupAvatar, popupDeleteCard, config } from '../utils/constants.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 import Section from '../components/Section.js';
@@ -11,6 +11,7 @@ import PopupWithConfirmation from '../components/PopupWithConfirmation.js';
 
 
 //подготовительная работа для глобальной видимости___________________________________
+
 //объявляем переменную, чтобы впоследствие записать в нее значение id пользователя и передать это значение в класс card
 let userId;
 
@@ -35,7 +36,8 @@ const api = new Api({
 
 //Объединяем запрос данных профиля и получения карточек в один общий запрос с помощью Promise.all, иначе может возникнуть проблема, что _id пользователя еще не получили, а карточки уже пришли, и будут некорректно отображаться лайки и кнопки удаления на собственных карточках
 
-Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser('cards')])
+// Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser('cards')])
+Promise.all([api.getUserInfo(), api.getInitialCards()])
   .then(([userData, cards]) => {
 
     
@@ -44,11 +46,11 @@ Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser(
     // Установка данных пользователя
     
     //отрисовываем данные пользователя с сервера на странице
-    const getUserInfoFromServer = userSelector.getUserInfoFromServer(userData);
-    userName.textContent = getUserInfoFromServer.name;
-    usersHobby.textContent = getUserInfoFromServer.profession;
-    usersAvatar.src = getUserInfoFromServer.avatar;
-    userId = getUserInfoFromServer.id;
+    userSelector.setUserInfo(userData);
+    
+    //записываем в переменную значение id
+    userId = userData._id;
+    
 
     //нажатие кнопки редактирования профиля
     buttonEditProfile.addEventListener('click', () => {
@@ -67,7 +69,7 @@ Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser(
       popupProfile,
       //посылаем на сервер данные из попапа (item), сервер возвращает объект (data) - его поля показываем на странице
       (item) => {
-      api.updateUser('users/me', { name: item.initials , about: item.profession })
+      api.updateUser({ name: item.initials , about: item.profession })
         .then((data) => {
           userSelector.setUserInfo(data);
           popupProfileForm.close();
@@ -94,7 +96,6 @@ Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser(
       items: cards,
       //функция создания карточки (без вставки ее в DOM)
       renderer: (item) => {
-        //debugger;
         const card = new Card(item, '.template', (item) => {popupWithImage.open(item)}, api, popupDeleteForm, userId);
         const taskTemplate = card.generateCard();
         //возвращаем готовую карточку с установленными обработчиками
@@ -112,7 +113,7 @@ Promise.all([api.getInitialCardsAndUser('users/me'), api.getInitialCardsAndUser(
       //this._handleFormCallBack(6 строчек вниз) принимает данные всех полей формы
       (item) => {
         //отправляем на сервер объект с двумя полями (данными введенными пользователем в попап), после чего сервер возвращает другой объект (data) - его и отрисовываем на странице
-        api.createCard('cards', { name: item.name , link: item.link })
+        api.createCard({ name: item.name , link: item.link })
           .then((data) => {
           //из данных, пришедших с сервера, создаем карточку и вставляем ее в DOM
           initialCardList.addItem({ name: data.name, link: data.link, likes: data.likes, owner: data.owner, _id: data._id });
@@ -159,6 +160,7 @@ const avatarFormValidator = new FormValidator(config, '.popup__form-avatar');
 avatarFormValidator.enableValidation();
 
 
+// //Это потому, что Вы находите форму внутри FormValidator, а мой вариант передает готовую форму в конструктор. Нужно просто внутри класса не искать форму, а сразу брать ее из конструктора
 // //Этот вариант для валидации полей не хочет работать, как ни старался
 // //Можно универсально создать экземпляры валидаторов всех форм, поместив их все в один объект, а потом брать из него валидатор по атрибуту name, который задан для формы. Это очень универсально и для любого кол-ва форм подходит.
 // const formValidators = {}
@@ -196,7 +198,7 @@ const popupAvatarForm = new PopupWithForm (
   popupAvatar,
   (item) => {
     //отправляем на сервер объект с одним полем (данными введенными пользователем в попап), после чего сервер возвращает другой объект (data) - его и отрисовываем на странице
-    api.updateUser('users/me/avatar', { avatar: item.link })
+    api.updateUserAvatar({ avatar: item.link })
       .then(data => {
         userSelector.setAvatar(data);
         popupAvatarForm.close();
@@ -224,7 +226,7 @@ usersAvatar.addEventListener('click', () => {
 const popupDeleteForm = new PopupWithConfirmation (
   popupDeleteCard,
   (data) => {
-  api.confirmationDeletion('cards', data.id)
+  api.deleteCard(data.id)
     .then(() => {
       data.remove();
       data = null;

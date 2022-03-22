@@ -13,19 +13,11 @@ export default class UserInfo {
     return userInfo;
   }
 
-  getUserInfoFromServer(data) {
-    const userInfoFromServer = {}
-    userInfoFromServer.name = data.name;
-    userInfoFromServer.profession = data.about;
-    userInfoFromServer.avatar = data.avatar;
-    userInfoFromServer.id = data._id;
-    return userInfoFromServer;
-  }
-
-  //принимаем новые данные пользователя и вставляем их на страницу
+  //принимаем новые данные пользователя (с сервера или из попапа) и вставляем их на страницу
   setUserInfo(item) {
     this._name.textContent = item.name;
     this._profession.textContent = item.about;
+    this._avatar.src = item.avatar;
   }
 
   //принимаем с сервера аватарку и отображаем на странице

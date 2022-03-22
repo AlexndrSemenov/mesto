@@ -26,7 +26,7 @@ export default class Card {
     if (this._likeButton.classList.contains('photo-grid__heart_active'))
     //если есть удаляем лайк
       {
-      this._api.deleteLikes('cards', this._data._id)
+      this._api.deleteLikes(this._data._id)
       .then(data => {
         this._photoGridLikes.textContent = data.likes.length;
         this._likeButton.classList.remove('photo-grid__heart_active');
@@ -34,7 +34,7 @@ export default class Card {
       .catch(err => console.log(err))
       } else {
       //если нет ставим лайк
-      this._api.putLikes('cards', this._data._id)
+      this._api.putLikes(this._data._id)
       .then(data => {
         this._photoGridLikes.textContent = data.likes.length;
         this._likeButton.classList.add('photo-grid__heart_active');
@@ -92,29 +92,3 @@ export default class Card {
     });
   }
 }
-
-
-
-
-// _handleLike = () => {
-    
-  //   //проверяем наличие класса
-  //   if (this._likeButton.classList.contains('photo-grid__heart_active'))
-  //   //если есть удаляем лайк
-  //     {
-  //     this._api.deleteLikes(this._data._id)
-  //     .then(data => {
-  //       this._photoGridLikes.textContent = data.likes.length;
-  //       this._likeButton.classList.remove('photo-grid__heart_active');
-  //     })
-  //     .catch(err => console.log(err))
-  //     } else {
-  //     //если нет ставим лайк
-  //     this._api.putLikes(this._data._id)
-  //     .then(data => {
-  //       this._photoGridLikes.textContent = data.likes.length;
-  //       this._likeButton.classList.add('photo-grid__heart_active');
-  //     })
-  //     .catch(err => console.log(err));
-  //     }
-  // }
